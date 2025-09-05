@@ -23,3 +23,4 @@ La elegi principalmente porque me llama mucho la antencion esto de aprender a cr
 ## Entregables
 - [Apuntes](mds/apuntes.md)
 - [Práctica 2](mds/ramas-fusiones.md)
+- [Practica 3](mds/etiquetas.md)

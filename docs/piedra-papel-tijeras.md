@@ -49,3 +49,10 @@ En cualquier otro caso, gana la máquina.
 
 
 Muestra el resultado cada vez que se juega. Usa solo un archivo HTML autoconclusivo.
+
+## Link de la conversacion
+https://g.co/gemini/share/8e30fbbbc9d4
+
+## Juego web generado por IA
+
+[Jugar Piedra, Papel o Tijeras (Web)](https://jemilio1407.github.io/entregas-lenguajes-interpretados/index.html)

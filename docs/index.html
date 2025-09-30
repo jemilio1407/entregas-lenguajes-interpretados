@@ -1,30 +1,119 @@
-# Piedra papel o tijeras
-## Historia
-El clásico juego “Piedra, Papel o Tijeras” es un juego milenario usado para la toma de decisiones entre dos jugadores. Su origen es incierto, pero se cree que se popularizó en Asia antes de difundirse por todo el mundo. Ahora se utiliza como método sencillo para resolver disputas en cualquier contexto.
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piedra, Papel o Tijeras</title>
+    <!-- Carga de Tailwind CSS para un diseño moderno y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos personalizados para mejorar la apariencia */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .choice-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .choice-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Estilos para los resultados */
+        #result {
+            transition: all 0.3s ease-in-out;
+        }
+        .win {
+            color: #10B981; /* Verde */
+        }
+        .lose {
+            color: #EF4444; /* Rojo */
+        }
+        .tie {
+            color: #6B7280; /* Gris */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-## Reglas y mecanicas
-1. Dos jugadores eligen entre piedra, papel y tijeras al mismo tiempo.
-2. Piedra vence a tijeras.
-3. Tijeras vence a papel.
-4. Papel vence a piedra.
-5. Si ambos eligen la misma opción, es empate.
+    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+        <!-- Título del juego -->
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Piedra, Papel o Tijeras</h1>
+        <p class="text-gray-500 mb-8">Elige tu jugada para desafiar a la máquina.</p>
 
-## Algortimo del juego
-1. Entrada del jugador: El usuario elige entre “piedra”, “papel” o “tijeras”.
-2. Elección aleatoria para la máquina: La máquina escoge una opción basado en un número aleatorio.
-3. Comparación de opciones:
+        <!-- Botones para la elección del jugador -->
+        <div class="flex justify-center space-x-4 mb-8">
+            <button onclick="playGame('piedra')" class="choice-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg text-2xl">✊</button>
+            <button onclick="playGame('papel')" class="choice-btn bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-lg text-2xl">✋</button>
+            <button onclick="playGame('tijeras')" class="choice-btn bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded-lg text-2xl">✌️</button>
+        </div>
 
-    Si las opciones coinciden, es “Empate”.
+        <!-- Sección para mostrar las elecciones y el resultado -->
+        <div class="space-y-4">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-gray-600">Tu elección: <span id="player-choice" class="font-bold text-xl">-</span></p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-gray-600">Elección de la máquina: <span id="machine-choice" class="font-bold text-xl">-</span></p>
+            </div>
+            <div id="result-container" class="mt-6">
+                <h2 id="result" class="text-5xl font-extrabold text-gray-700">¡Juega!</h2>
+            </div>
+        </div>
+    </div>
 
-    Si no hay empate, se comparan las opciones del jugador y la máquina:
+    <script>
+        // Elementos del DOM para mostrar los resultados
+        const playerChoiceEl = document.getElementById('player-choice');
+        const machineChoiceEl = document.getElementById('machine-choice');
+        const resultEl = document.getElementById('result');
 
-    Si jugador elige “papel” y la máquina “piedra”, gana el jugador.
+        // Opciones del juego
+        const options = ['piedra', 'papel', 'tijeras'];
+        const emojiMap = {
+            piedra: '✊',
+            papel: '✋',
+            tijeras: '✌️'
+        };
 
-    Si jugador elige “piedra” y la máquina “tijeras”, gana el jugador.
+        /**
+         * Función principal para ejecutar la lógica del juego.
+         * @param {string} playerChoice - La elección del jugador ('piedra', 'papel', o 'tijeras').
+         */
+        function playGame(playerChoice) {
+            // 1. La máquina elige aleatoriamente
+            const machineChoice = options[Math.floor(Math.random() * options.length)];
 
-    Si jugador elige “tijeras” y la máquina “papel”, gana el jugador.
+            // 2. Muestra las elecciones en la interfaz
+            playerChoiceEl.textContent = emojiMap[playerChoice];
+            machineChoiceEl.textContent = emojiMap[machineChoice];
 
-    En cualquier otro caso, pierde el jugador.
+            // 3. Aplica la lógica del juego para determinar el ganador
+            let resultText = '';
+            let resultClass = '';
 
-## Diagrama de flujo
-![Diagrama de flujo de Piedra, Papel o Tijeras](../assets/diagrama.png)
+            if (playerChoice === machineChoice) {
+                // Caso de Empate
+                resultText = '¡Empate!';
+                resultClass = 'tie';
+            } else if (
+                (playerChoice === 'papel' && machineChoice === 'piedra') ||
+                (playerChoice === 'piedra' && machineChoice === 'tijeras') ||
+                (playerChoice === 'tijeras' && machineChoice === 'papel')
+            ) {
+                // Casos donde el jugador gana
+                resultText = '¡Ganaste!';
+                resultClass = 'win';
+            } else {
+                // En cualquier otro caso, la máquina gana
+                resultText = '¡Perdiste!';
+                resultClass = 'lose';
+            }
+
+            // 4. Muestra el resultado final en la interfaz
+            resultEl.textContent = resultText;
+            resultEl.className = `text-5xl font-extrabold ${resultClass}`;
+        }
+    </script>
+
+</body>
+</html>

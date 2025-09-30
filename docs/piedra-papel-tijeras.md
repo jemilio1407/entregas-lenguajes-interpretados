@@ -28,3 +28,24 @@ El clásico juego “Piedra, Papel o Tijeras” es un juego milenario usado para
 
 ## Diagrama de flujo
 ![Diagrama de flujo de Piedra, Papel o Tijeras](../assets/diagrama.png)
+
+## Prompt
+Crea una página web solo usando HTML (solo HTML, no uses JS ni CSS en archivos separados) que implemente el juego Piedra, Papel o Tijeras siguiendo este esquema:
+El usuario elige entre piedra, papel o tijeras con botones.
+
+La máquina elige aleatoriamente entre las tres opciones.
+
+Aplica la lógica del juego según este diagrama de flujo:
+
+Si ambas opciones son iguales, muestra "Empate".
+
+Si jugador elige “papel” y la máquina “piedra”, gana el jugador.
+
+Si jugador elige “piedra” y la máquina “tijeras”, gana el jugador.
+
+Si jugador elige “tijeras” y la máquina “papel”, gana el jugador.
+
+En cualquier otro caso, gana la máquina.
+
+
+Muestra el resultado cada vez que se juega. Usa solo un archivo HTML autoconclusivo.

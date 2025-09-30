@@ -26,3 +26,4 @@ La elegi principalmente porque me llama mucho la antencion esto de aprender a cr
 - [Practica 3](mds/etiquetas.md)
 - [Practica 4](mds/primer-parcial.md)
 - [Práctica 6](docs/piedra-papel-tijeras.html)
+- [Pactica 7](https://jemilio1407.github.io/entregas-lenguajes-interpretados/index.html)

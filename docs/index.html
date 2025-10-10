@@ -1,119 +1,305 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piedra, Papel o Tijeras</title>
-    <!-- Carga de Tailwind CSS para un diseño moderno y responsivo -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Estilos personalizados para mejorar la apariencia */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .choice-btn {
-            transition: all 0.2s ease-in-out;
-        }
-        .choice-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        /* Estilos para los resultados */
-        #result {
-            transition: all 0.3s ease-in-out;
-        }
-        .win {
-            color: #10B981; /* Verde */
-        }
-        .lose {
-            color: #EF4444; /* Rojo */
-        }
-        .tie {
-            color: #6B7280; /* Gris */
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dino Runner — Simple Pixel Art</title>
+  <style>
+    :root{--bg:#e0f7fa;--ground:#70a288;--panel-bg:rgba(0,0,0,0.6);--text:#fff}
+    html,body{height:100%;margin:0;font-family:system-ui,Segoe UI,Roboto,Arial}
+    .wrap{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(#b3e5fc,#e0f7fa)}
+    .card{background:var(--bg);padding:16px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.12);display:grid;gap:12px;align-items:center}
+    h1{margin:0;font-size:18px;text-align:center}
+    canvas{background:linear-gradient(#bfe9ff,#c7f0ff);display:block;border-radius:6px;image-rendering:pixelated}
+    .info{display:flex;gap:8px;align-items:center;justify-content:space-between}
+    .controls{font-size:13px;color:#263238}
+    .overlay{position:relative}
+    .panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--panel-bg);color:var(--text);padding:14px;border-radius:8px;text-align:center;min-width:220px}
+    button{cursor:pointer;padding:8px 12px;border-radius:6px;border:none;background:#ffcc00;font-weight:600}
+    .small{font-size:13px;color:#37474f}
+    @media (max-width:520px){.card{margin:8px;width:100%}}
+  </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-
-    <div class="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
-        <!-- Título del juego -->
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Piedra, Papel o Tijeras</h1>
-        <p class="text-gray-500 mb-8">Elige tu jugada para desafiar a la máquina.</p>
-
-        <!-- Botones para la elección del jugador -->
-        <div class="flex justify-center space-x-4 mb-8">
-            <button onclick="playGame('piedra')" class="choice-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg text-2xl">✊</button>
-            <button onclick="playGame('papel')" class="choice-btn bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-lg text-2xl">✋</button>
-            <button onclick="playGame('tijeras')" class="choice-btn bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded-lg text-2xl">✌️</button>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Dino Runner — Pixel Art (sin librerías)</h1>
+      <div class="overlay" style="position:relative;">
+        <canvas id="game" width="300" height="75" style="width:900px;height:225px"></canvas>
+        <div id="uiPanel" class="panel" style="display:none">
+          <div id="gameMsg">Game Over</div>
+          <div style="margin:8px 0;font-size:14px">Puntaje: <span id="finalScore">0</span></div>
+          <button id="restartBtn">Reiniciar</button>
         </div>
-
-        <!-- Sección para mostrar las elecciones y el resultado -->
-        <div class="space-y-4">
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <p class="text-gray-600">Tu elección: <span id="player-choice" class="font-bold text-xl">-</span></p>
-            </div>
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <p class="text-gray-600">Elección de la máquina: <span id="machine-choice" class="font-bold text-xl">-</span></p>
-            </div>
-            <div id="result-container" class="mt-6">
-                <h2 id="result" class="text-5xl font-extrabold text-gray-700">¡Juega!</h2>
-            </div>
+      </div>
+      <div class="info">
+        <div class="controls">
+          Controles: <strong>Espacio / Flecha arriba</strong> para saltar — Toca la pantalla en móviles
         </div>
+        <div style="text-align:right">
+          <div>Puntaje: <span id="score">0</span></div>
+          <div class="small">Salta los obstáculos para sumar</div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // Elementos del DOM para mostrar los resultados
-        const playerChoiceEl = document.getElementById('player-choice');
-        const machineChoiceEl = document.getElementById('machine-choice');
-        const resultEl = document.getElementById('result');
+<script>
+// Dino Runner - Un solo archivo: HTML/CSS/JS
+// Pixel art se dibuja en un canvas pequeño y se escala con CSS para conservar el aspecto 'pixelado'.
 
-        // Opciones del juego
-        const options = ['piedra', 'papel', 'tijeras'];
-        const emojiMap = {
-            piedra: '✊',
-            papel: '✋',
-            tijeras: '✌️'
-        };
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false; // píxeles nítidos
 
-        /**
-         * Función principal para ejecutar la lógica del juego.
-         * @param {string} playerChoice - La elección del jugador ('piedra', 'papel', o 'tijeras').
-         */
-        function playGame(playerChoice) {
-            // 1. La máquina elige aleatoriamente
-            const machineChoice = options[Math.floor(Math.random() * options.length)];
+const W = canvas.width; // 300
+const H = canvas.height; // 75
 
-            // 2. Muestra las elecciones en la interfaz
-            playerChoiceEl.textContent = emojiMap[playerChoice];
-            machineChoiceEl.textContent = emojiMap[machineChoice];
+// Mundo
+const groundY = H - 18; // altura del suelo (coordenada y del pie del dino)
+let lastTimestamp = 0;
+let running = false;
+let gameOver = false;
 
-            // 3. Aplica la lógica del juego para determinar el ganador
-            let resultText = '';
-            let resultClass = '';
+// Jugador (dinosaurio)
+const dino = {
+  x: 40,
+  w: 12,
+  h: 14,
+  y: groundY - 14,
+  vy: 0,
+  jumpVel: -6.0,
+  gravity: 0.34,
+  grounded: true,
+  animFrame: 0,
+  animTimer: 0
+};
 
-            if (playerChoice === machineChoice) {
-                // Caso de Empate
-                resultText = '¡Empate!';
-                resultClass = 'tie';
-            } else if (
-                (playerChoice === 'papel' && machineChoice === 'piedra') ||
-                (playerChoice === 'piedra' && machineChoice === 'tijeras') ||
-                (playerChoice === 'tijeras' && machineChoice === 'papel')
-            ) {
-                // Casos donde el jugador gana
-                resultText = '¡Ganaste!';
-                resultClass = 'win';
-            } else {
-                // En cualquier otro caso, la máquina gana
-                resultText = '¡Perdiste!';
-                resultClass = 'lose';
-            }
+// Obstáculos
+let obstacles = [];
+let spawnTimer = 0;
 
-            // 4. Muestra el resultado final en la interfaz
-            resultEl.textContent = resultText;
-            resultEl.className = `text-5xl font-extrabold ${resultClass}`;
-        }
-    </script>
+// Puntaje
+let score = 0;
 
+// Ajustes de dificultad
+let speed = 2.3; // velocidad de desplazamiento global
+let spawnIntervalMin = 900;
+let spawnIntervalMax = 1800;
+
+// Pixel sprites: matrices (0 = transparente, 1 = color principal, 2 = sombreado)
+// Diseño simple para un dino pequeño (14x12)
+const dinoSprite = [
+  '000001111110',
+  '000111111111',
+  '001111111111',
+  '011111111111',
+  '011111111111',
+  '011111111111',
+  '011111011111',
+  '011111111110',
+  '011111111100',
+  '001111110000',
+  '001111100000',
+  '001110000000',
+  '000000000000',
+  '000000000000'
+];
+
+function drawPixelSprite(sprite, x, y, scale, color='#1b5e20'){
+  for(let row=0; row<sprite.length; row++){
+    const line = sprite[row];
+    for(let col=0; col<line.length; col++){
+      const ch = line[col];
+      if(ch === '0') continue;
+      ctx.fillStyle = color;
+      ctx.fillRect(x + col*scale, y + row*scale, scale, scale);
+    }
+  }
+}
+
+function resetGame(){
+  obstacles = [];
+  spawnTimer = 0;
+  score = 0;
+  speed = 2.3;
+  dino.y = groundY - dino.h;
+  dino.vy = 0;
+  dino.grounded = true;
+  dino.animFrame = 0;
+  gameOver = false;
+  document.getElementById('score').textContent = score;
+}
+
+function spawnObstacle(){
+  const w = 8 + Math.floor(Math.random()*12); // ancho
+  const h = 8 + Math.floor(Math.random()*22); // alto
+  obstacles.push({x: W + 6, y: groundY - h, w, h, counted:false});
+}
+
+function update(dt){
+  if(gameOver) return;
+
+  // mover jugador (física simple)
+  dino.vy += dino.gravity;
+  dino.y += dino.vy;
+  if(dino.y >= groundY - dino.h){
+    dino.y = groundY - dino.h;
+    dino.vy = 0;
+    dino.grounded = true;
+  } else {
+    dino.grounded = false;
+  }
+
+  // animación de correr (cuando en tierra)
+  dino.animTimer += dt;
+  if(dino.grounded){
+    if(dino.animTimer > 120){ dino.animFrame = (dino.animFrame + 1) % 2; dino.animTimer = 0; }
+  } else {
+    dino.animFrame = 0;
+  }
+
+  // Obstáculos
+  spawnTimer -= dt;
+  if(spawnTimer <= 0){
+    const next = spawnIntervalMin + Math.random()*(spawnIntervalMax - spawnIntervalMin);
+    spawnTimer = next;
+    spawnObstacle();
+  }
+
+  // Mover obstáculos
+  for(let i = obstacles.length-1; i>=0; i--){
+    const ob = obstacles[i];
+    ob.x -= speed;
+
+    // puntaje: cuando pasa al dino
+    if(!ob.counted && ob.x + ob.w < dino.x){
+      ob.counted = true;
+      score += 1;
+      document.getElementById('score').textContent = score;
+      // incrementar ligeramente la velocidad cada 5 puntos
+      if(score % 5 === 0){ speed += 0.25; }
+    }
+
+    // eliminar si fuera de pantalla
+    if(ob.x + ob.w < -20) obstacles.splice(i,1);
+  }
+
+  // colisiones AABB
+  for(const ob of obstacles){
+    if(rectsOverlap(dino.x, dino.y, dino.w, dino.h, ob.x, ob.y, ob.w, ob.h)){
+      // colisión
+      triggerGameOver();
+      break;
+    }
+  }
+}
+
+function rectsOverlap(x1,y1,w1,h1,x2,y2,w2,h2){
+  return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
+}
+
+function triggerGameOver(){
+  gameOver = true;
+  running = false;
+  // mostrar panel
+  const ui = document.getElementById('uiPanel');
+  document.getElementById('finalScore').textContent = score;
+  ui.style.display = 'block';
+}
+
+function draw(){
+  // Limpiar
+  ctx.clearRect(0,0,W,H);
+
+  // Suelo
+  ctx.fillStyle = '#8bc34a';
+  ctx.fillRect(0, groundY, W, H-groundY);
+  // Linea de suelo
+  ctx.fillStyle = '#558b2f';
+  ctx.fillRect(0, groundY + 6, W, 2);
+
+  // Dibujar dino (escalado en 'pixels' de 1)
+  // Usamos escala 1 para el sprite y ajustamos posición
+  drawPixelSprite(dinoSprite, Math.round(dino.x), Math.round(dino.y), 1, '#1b5e20');
+
+  // Si en el aire, dibujamos sombra
+  if(!dino.grounded){
+    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    ctx.fillRect(dino.x+2, groundY + 2, dino.w-4, 3);
+  }
+
+  // Dibujar obstáculos (pixel style)
+  for(const ob of obstacles){
+    // sombra
+    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    ctx.fillRect(ob.x+1, ob.y+ob.h+1, ob.w, 2);
+    // cuerpo
+    drawPixelRect(Math.round(ob.x), Math.round(ob.y), ob.w, ob.h, 1);
+  }
+
+  // puntaje arriba
+  ctx.fillStyle = '#263238';
+  ctx.font = '8px monospace';
+  ctx.fillText('Puntaje: ' + score, W - 78, 9);
+}
+
+function drawPixelRect(x,y,w,h,scale){
+  // Dibuja un rectángulo con "píxeles" cuadrados
+  for(let yy=0; yy<h; yy++){
+    for(let xx=0; xx<w; xx++){
+      ctx.fillStyle = '#2e7d32';
+      ctx.fillRect(x + xx*scale, y + yy*scale, scale, scale);
+    }
+  }
+}
+
+function loop(ts){
+  if(!lastTimestamp) lastTimestamp = ts;
+  const dt = ts - lastTimestamp;
+  lastTimestamp = ts;
+
+  if(running) update(dt);
+  draw();
+
+  requestAnimationFrame(loop);
+}
+
+// Input
+function jump(){
+  if(gameOver) return;
+  if(dino.grounded){
+    dino.vy = dino.jumpVel;
+    dino.grounded = false;
+    if(!running){ running = true; }
+  }
+}
+
+window.addEventListener('keydown', e => {
+  if(e.code === 'Space' || e.code === 'ArrowUp'){
+    e.preventDefault();
+    jump();
+  }
+});
+
+// soporte táctil: toque para saltar / iniciar
+canvas.addEventListener('touchstart', e => { e.preventDefault(); jump(); });
+canvas.addEventListener('mousedown', e => { jump(); });
+
+// reiniciar
+document.getElementById('restartBtn').addEventListener('click', () => {
+  resetGame();
+  document.getElementById('uiPanel').style.display = 'none';
+  running = true;
+});
+
+// start loop
+resetGame();
+requestAnimationFrame(loop);
+
+// Pequeñas instrucciones para usuarios: si quieres guardar como archivo
+// Copia todo el contenido de este documento y pégalo en un archivo llamado "dino.html" y ábrelo en el navegador.
+
+</script>
 </body>
 </html>

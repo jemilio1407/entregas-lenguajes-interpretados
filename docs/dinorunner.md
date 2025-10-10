@@ -20,3 +20,14 @@ El jugador controla a un dinosaurio que corre automáticamente por un paisaje de
 
 ## Diagrama de flujo
 ![Diagrama de flujo de Piedra, Papel o Tijeras](../assets/dinorunner.png)
+
+## Prompt
+
+Crea una versión web interactiva del juego Dino Runner usando HTML, CSS y JavaScript. El juego debe mostrar un dinosaurio que corre y salta obstáculos, aumentando el puntaje por cada obstáculo esquivado. El juego termina si hay una colisión. Elige gráficos simples, ideal tipo pixel art.
+
+## Link de la conversacion
+https://chatgpt.com/share/68e8898d-b3d0-800a-9973-c9fd31da5218
+
+## Juego web generado por IA
+
+[Jugar Piedra, Papel o Tijeras (Web)](https://jemilio1407.github.io/entregas-lenguajes-interpretados/index.html)

@@ -25,5 +25,5 @@ La elegi principalmente porque me llama mucho la antencion esto de aprender a cr
 - [Práctica 2](mds/ramas-fusiones.md)
 - [Practica 3](mds/etiquetas.md)
 - [Practica 4](mds/primer-parcial.md)
-- [Práctica 6](docs/piedra-papel-tijeras.md)
+- [Práctica 6](docs/dinorunner.md)
 - [Pactica 7](https://jemilio1407.github.io/entregas-lenguajes-interpretados/index.html)

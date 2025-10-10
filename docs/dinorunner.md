@@ -30,4 +30,4 @@ https://chatgpt.com/share/68e8898d-b3d0-800a-9973-c9fd31da5218
 
 ## Juego web generado por IA
 
-[Jugar Piedra, Papel o Tijeras (Web)](https://jemilio1407.github.io/entregas-lenguajes-interpretados/index.html)
+[DinoRunner (Web)](https://jemilio1407.github.io/entregas-lenguajes-interpretados/index.html)
